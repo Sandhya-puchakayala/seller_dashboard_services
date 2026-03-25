@@ -1,0 +1,42 @@
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\Sandhya.p\Desktop\package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * C:\Users\Sandhya.p\Desktop\petoty-services_page\petoty-seller-dashboard-main\frontend\package-lock.json
+   * C:\Users\Sandhya.p\Desktop\petoty-services_page\petoty-seller-dashboard-main\package-lock.json
+
+   ▲ Next.js 15.5.13
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 5.3s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/13) ...
+   Generating static pages (3/13) 
+   Generating static pages (6/13) 
+   Generating static pages (9/13) 
+ ✓ Generating static pages (13/13)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      123 B         102 kB
+├ ○ /_not-found                            992 B         103 kB
+├ ○ /Login                               4.68 kB         143 kB
+├ ○ /seller-dashboard                    3.01 kB         141 kB
+├ ○ /seller-dashboard/account            3.75 kB         106 kB
+├ ○ /seller-dashboard/alerts              1.9 kB         140 kB
+├ ○ /seller-dashboard/ask-admin          1.71 kB         140 kB
+├ ○ /seller-dashboard/orders             2.49 kB         141 kB
+├ ○ /seller-dashboard/payments           2.15 kB         140 kB
+├ ○ /seller-dashboard/products           6.27 kB         145 kB
+└ ○ /seller-dashboard/services           4.41 kB         143 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/255-3991756713d22f05.js         46 kB
+  ├ chunks/4bd1b696-c023c6e3521b1417.js  54.2 kB
+  └ other shared chunks (total)          1.99 kB
+
+
+○  (Static)  prerendered as static content
+

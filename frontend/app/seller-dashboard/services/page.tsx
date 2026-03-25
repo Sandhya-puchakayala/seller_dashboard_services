@@ -48,9 +48,9 @@ export default function ServicesPage() {
   const [uploading, setUploading] = useState(false);
 
   // KPIs
-  const publishedCount = services.filter(s => s.status === "Published" || s.status === "Online").length;
-  const draftCount = services.filter(s => s.status === "Draft").length;
-  const availableCount = services.filter(s => s.availability === "Available").length;
+  const publishedCount = services.filter((s: any) => s.status === "Published" || s.status === "Online").length;
+  const draftCount = services.filter((s: any) => s.status === "Draft").length;
+  const availableCount = services.filter((s: any) => s.availability === "Available").length;
   const totalServices = services.length;
 
   const handleEdit = (service: any) => {
@@ -227,7 +227,7 @@ export default function ServicesPage() {
                 {services.length === 0 ? (
                   <tr><td colSpan={6} className="text-center py-8 text-gray-500">No services found.</td></tr>
                 ) : (
-                  services.map(s => (
+                  services.map((s: any) => (
                     <tr key={s._id} className="border-b border-gray-100 hover:bg-gray-50 group">
                       <td className="py-3 px-4"><input type="checkbox" className="rounded" /></td>
                       <td className="py-3 px-4">
