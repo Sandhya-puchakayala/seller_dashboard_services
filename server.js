@@ -24,25 +24,28 @@ app.get('/api/health', (req, res) => {
 });
 
 // Create uploads directory if it doesn't exist
-const uploadDir = path.join(__dirname, 'uploads');
+// In Vercel, only /tmp is writable
+const isVercel = process.env.VERCEL || process.env.NODE_ENV === 'production';
+const uploadDir = isVercel ? '/tmp/uploads' : path.join(__dirname, 'uploads');
+
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
+  fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 // Set up multer for file uploads
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, isVercel ? '/tmp/uploads/' : 'uploads/');
   },
   filename(req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname.replace(/\\s+/g, '-')}`);
+    cb(null, `${Date.now()}-${file.originalname.replace(/\s+/g, '-')}`);
   },
 });
 
 const upload = multer({ storage });
 
 // Serve static files from the uploads directory
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(uploadDir));
 
 // Upload Route
 app.post('/api/upload', upload.single('document'), (req, res) => {
@@ -65,7 +68,14 @@ const connectDB = async () => {
     const isValidURI = mongoURI && (mongoURI.startsWith('mongodb://') || mongoURI.startsWith('mongodb+srv://'));
     let finalURI = mongoURI;
 
+    // Do NOT run MongoMemoryServer on Vercel
+    const isVercel = process.env.VERCEL || process.env.NODE_ENV === 'production';
+
     if (!isValidURI || mongoURI.includes('127.0.0.1') || mongoURI.includes('localhost')) {
+      if (isVercel) {
+        throw new Error("MONGO_URI is missing or invalid. MongoMemoryServer cannot run on Vercel's Serverless environment.");
+      }
+      
       console.log('No valid remote URI provided or local URI detected. Booting a persistent local Database engine...');
       
       const fs = require('fs');
@@ -86,7 +96,10 @@ const connectDB = async () => {
     console.log(`MongoDB connected successfully to ${finalURI.includes('127.0.0.1') ? 'development Local DB' : 'remote DB'}.`);
   } catch (err) {
     console.error('MongoDB connection error:', err);
-    process.exit(1);
+    // In serverless, we don't process.exit on error
+    if (!process.env.VERCEL) {
+      process.exit(1);
+    }
   }
 };
 
@@ -94,7 +107,13 @@ connectDB();
 
 
 // Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Vercel handles starting the server internally if correctly exported
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+// Export for Vercel
+module.exports = app;
